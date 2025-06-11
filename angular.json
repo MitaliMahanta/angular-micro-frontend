@@ -1,0 +1,229 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "shell": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/shell",
+      "sourceRoot": "projects/shell/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-architects/module-federation:build",
+          "options": {
+            "outputPath": "dist/shell",
+            "index": "projects/shell/src/index.html",
+            "browser": "projects/shell/src/main.ts",
+            "polyfills": ["zone.js"],
+            "tsConfig": "projects/shell/tsconfig.app.json",
+            "assets": [
+              "projects/shell/src/favicon.ico",
+              "projects/shell/src/assets"
+            ],
+            "styles": [
+              "@angular/material/prebuilt-themes/indigo-pink.css",
+              "@progress/kendo-theme-default/dist/all.css",
+              "projects/shell/src/styles.scss"
+            ],
+            "scripts": [],
+            "extraWebpackConfig": "projects/shell/webpack.config.js",
+            "commonChunk": false
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all",
+              "extractLicenses": true,
+              "optimization": true,
+              "sourceMap": false,
+              "namedChunks": false
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-architects/module-federation:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "shell:build:production"
+            },
+            "development": {
+              "buildTarget": "shell:build:development"
+            }
+          },
+          "defaultConfiguration": "development",
+          "options": {
+            "port": 4200,
+            "extraWebpackConfig": "projects/shell/webpack.config.js"
+          }
+        }
+      }
+    },
+    "products": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/products",
+      "sourceRoot": "projects/products/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-architects/module-federation:build",
+          "options": {
+            "outputPath": "dist/products",
+            "index": "projects/products/src/index.html",
+            "browser": "projects/products/src/main.ts",
+            "polyfills": ["zone.js"],
+            "tsConfig": "projects/products/tsconfig.app.json",
+            "assets": [
+              "projects/products/src/favicon.ico",
+              "projects/products/src/assets"
+            ],
+            "styles": [
+              "@angular/material/prebuilt-themes/indigo-pink.css",
+              "@progress/kendo-theme-default/dist/all.css",
+              "projects/products/src/styles.scss"
+            ],
+            "scripts": [],
+            "extraWebpackConfig": "projects/products/webpack.config.js",
+            "commonChunk": false
+          }
+        },
+        "serve": {
+          "builder": "@angular-architects/module-federation:dev-server",
+          "options": {
+            "port": 4201,
+            "extraWebpackConfig": "projects/products/webpack.config.js"
+          }
+        }
+      }
+    },
+    "orders": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/orders",
+      "sourceRoot": "projects/orders/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-architects/module-federation:build",
+          "options": {
+            "outputPath": "dist/orders",
+            "index": "projects/orders/src/index.html",
+            "browser": "projects/orders/src/main.ts",
+            "polyfills": ["zone.js"],
+            "tsConfig": "projects/orders/tsconfig.app.json",
+            "assets": [
+              "projects/orders/src/favicon.ico",
+              "projects/orders/src/assets"
+            ],
+            "styles": [
+              "@angular/material/prebuilt-themes/indigo-pink.css",
+              "@progress/kendo-theme-default/dist/all.css",
+              "projects/orders/src/styles.scss"
+            ],
+            "scripts": [],
+            "extraWebpackConfig": "projects/orders/webpack.config.js",
+            "commonChunk": false
+          }
+        },
+        "serve": {
+          "builder": "@angular-architects/module-federation:dev-server",
+          "options": {
+            "port": 4202,
+            "extraWebpackConfig": "projects/orders/webpack.config.js"
+          }
+        }
+      }
+    },
+    "users": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/users",
+      "sourceRoot": "projects/users/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-architects/module-federation:build",
+          "options": {
+            "outputPath": "dist/users",
+            "index": "projects/users/src/index.html",
+            "browser": "projects/users/src/main.ts",
+            "polyfills": ["zone.js"],
+            "tsConfig": "projects/users/tsconfig.app.json",
+            "assets": [
+              "projects/users/src/favicon.ico",
+              "projects/users/src/assets"
+            ],
+            "styles": [
+              "@angular/material/prebuilt-themes/indigo-pink.css",
+              "@progress/kendo-theme-default/dist/all.css",
+              "projects/users/src/styles.scss"
+            ],
+            "scripts": [],
+            "extraWebpackConfig": "projects/users/webpack.config.js",
+            "commonChunk": false
+          }
+        },
+        "serve": {
+          "builder": "@angular-architects/module-federation:dev-server",
+          "options": {
+            "port": 4203,
+            "extraWebpackConfig": "projects/users/webpack.config.js"
+          }
+        }
+      }
+    },
+    "shared-lib": {
+      "projectType": "library",
+      "root": "projects/shared-lib",
+      "sourceRoot": "projects/shared-lib/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/shared-lib/ng-package.json"
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": false
+  }
+}

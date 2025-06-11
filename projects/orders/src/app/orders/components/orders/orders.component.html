@@ -1,0 +1,146 @@
+<div class="orders-container">
+  <div class="orders-header">
+    <h1>Orders Management</h1>
+    <p>Track and manage customer orders with real-time status updates.</p>
+  </div>
+
+  <mat-card class="orders-card">
+    <mat-card-header>
+      <mat-card-title>Order History</mat-card-title>
+      <div class="header-actions">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search orders...</mat-label>
+          <input matInput [formControl]="searchControl" placeholder="Search by order number, customer">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Filter by Status</mat-label>
+          <mat-select [formControl]="statusFilter">
+            <mat-option value="">All Statuses</mat-option>
+            <mat-option *ngFor="let status of orderStatuses" [value]="status">
+              {{ status | titlecase }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="table-container" *ngIf="!loading; else loadingTemplate">
+        <table mat-table [dataSource]="dataSource" matSort class="orders-table">
+          <!-- Order Number Column -->
+          <ng-container matColumnDef="orderNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Order #</th>
+            <td mat-cell *matCellDef="let order">
+              <div class="order-number">
+                <strong>{{ order.orderNumber }}</strong>
+                <small>{{ order.orderDate | date:'short' }}</small>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Customer Column -->
+          <ng-container matColumnDef="customer">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer</th>
+            <td mat-cell *matCellDef="let order">
+              <div class="customer-info">
+                <strong>{{ order.customerName }}</strong>
+                <small>{{ order.customerEmail }}</small>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Items Column -->
+          <ng-container matColumnDef="items">
+            <th mat-header-cell *matHeaderCellDef>Items</th>
+            <td mat-cell *matCellDef="let order">
+              <span class="items-count">{{ getTotalItems(order) }} items</span>
+            </td>
+          </ng-container>
+
+          <!-- Total Column -->
+          <ng-container matColumnDef="total">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Total</th>
+            <td mat-cell *matCellDef="let order">
+              <span class="total-amount">{{ order.total | currency }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+            <td mat-cell *matCellDef="let order">
+              <mat-chip-set>
+                <mat-chip [color]="getStatusColor(order.status)" selected>
+                  {{ order.status | titlecase }}
+                </mat-chip>
+              </mat-chip-set>
+            </td>
+          </ng-container>
+
+          <!-- Order Date Column -->
+          <ng-container matColumnDef="orderDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+            <td mat-cell *matCellDef="let order">
+              {{ order.orderDate | date:'mediumDate' }}
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let order">
+              <div class="actions">
+                <button mat-icon-button color="primary" matTooltip="View Details">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button 
+                  mat-icon-button 
+                  color="accent" 
+                  matTooltip="Update Status"
+                  [matMenuTriggerFor]="statusMenu">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button 
+                  mat-icon-button 
+                  color="warn" 
+                  matTooltip="Cancel Order"
+                  (click)="cancelOrder(order)"
+                  [disabled]="order.status === 'cancelled' || order.status === 'delivered'">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+                
+                <mat-menu #statusMenu="matMenu">
+                  <button 
+                    mat-menu-item 
+                    *ngFor="let status of orderStatuses"
+                    (click)="updateOrderStatus(order, status)"
+                    [disabled]="order.status === status">
+                    {{ status | titlecase }}
+                  </button>
+                </mat-menu>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="order-row"></tr>
+        </table>
+
+        <mat-paginator 
+          [pageSizeOptions]="[5, 10, 20, 50]" 
+          showFirstLastButtons
+          aria-label="Select page of orders">
+        </mat-paginator>
+      </div>
+
+      <ng-template #loadingTemplate>
+        <div class="loading-container">
+          <mat-spinner></mat-spinner>
+          <p>Loading orders...</p>
+        </div>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,113 @@
+<div class="user-form-container">
+  <h2 mat-dialog-title>{{ isEditMode ? 'Edit User' : 'Add New User' }}</h2>
+  
+  <mat-dialog-content>
+    <form [formGroup]="userForm" class="user-form">
+      <!-- Personal Information -->
+      <div class="form-section">
+        <h3>Personal Information</h3>
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName" placeholder="Enter first name">
+            <mat-error>{{ getErrorMessage('firstName') }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName" placeholder="Enter last name">
+            <mat-error>{{ getErrorMessage('lastName') }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" placeholder="Enter email address">
+            <mat-error>{{ getErrorMessage('email') }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Phone</mat-label>
+            <input matInput formControlName="phone" placeholder="Enter phone number">
+            <mat-hint>Format: +1-555-0123</mat-hint>
+            <mat-error>{{ getErrorMessage('phone') }}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Role & Access -->
+      <div class="form-section">
+        <h3>Role & Access</h3>
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Role</mat-label>
+            <mat-select formControlName="role">
+              <mat-option *ngFor="let role of userRoles" [value]="role">
+                {{ role | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>{{ getErrorMessage('role') }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option *ngFor="let status of userStatuses" [value]="status">
+                {{ status | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>{{ getErrorMessage('status') }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Permissions</mat-label>
+            <input matInput formControlName="permissions" placeholder="users.read, orders.write, products.read">
+            <mat-hint>Separate permissions with commas</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Organization -->
+      <div class="form-section">
+        <h3>Organization</h3>
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Department</mat-label>
+            <mat-select formControlName="department">
+              <mat-option value="">Select Department</mat-option>
+              <mat-option *ngFor="let dept of departments" [value]="dept">
+                {{ dept }}
+              </mat-option>
+              <mat-option value="other">Other</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Position</mat-label>
+            <input matInput formControlName="position" placeholder="Enter job title/position">
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" [disabled]="loading">
+      Cancel
+    </button>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="onSubmit()"
+      [disabled]="userForm.invalid || loading">
+      <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+      <span *ngIf="!loading">{{ isEditMode ? 'Update' : 'Create' }}</span>
+    </button>
+  </mat-dialog-actions>
+</div>

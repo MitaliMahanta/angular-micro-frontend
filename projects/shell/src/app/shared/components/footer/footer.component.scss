@@ -1,0 +1,57 @@
+.app-footer {
+  background: #fafafa;
+  border-top: 1px solid #e0e0e0;
+  padding: 16px 24px;
+  margin-top: auto;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-size: 14px;
+  color: rgba(0,0,0,0.6);
+}
+
+.footer-section {
+  display: flex;
+  align-items: center;
+}
+
+.footer-links {
+  display: flex;
+  gap: 16px;
+}
+
+.footer-link {
+  color: rgba(0,0,0,0.6);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+  
+  &:hover {
+    color: #3f51b5;
+    text-decoration: underline;
+  }
+}
+
+.version-info {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  background: rgba(0,0,0,0.05);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+  
+  .footer-links {
+    gap: 12px;
+  }
+}

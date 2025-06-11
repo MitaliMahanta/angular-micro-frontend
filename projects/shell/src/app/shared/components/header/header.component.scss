@@ -1,0 +1,54 @@
+.header-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.app-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-left: 16px;
+}
+
+.header-spacer {
+  flex: 1 1 auto;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-info {
+  padding: 8px 16px !important;
+  
+  .user-details {
+    display: flex;
+    flex-direction: column;
+    
+    strong {
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    
+    small {
+      color: rgba(0,0,0,0.6);
+      font-size: 12px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .app-title {
+    font-size: 1rem;
+    margin-left: 8px;
+  }
+  
+  .header-actions {
+    gap: 4px;
+  }
+}

@@ -1,0 +1,167 @@
+<div class="order-detail-container" *ngIf="!loading; else loadingTemplate">
+  <div class="detail-header">
+    <button mat-icon-button (click)="goBack()" matTooltip="Go back">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Order Details</h1>
+  </div>
+
+  <div class="order-content" *ngIf="order">
+    <!-- Order Summary Card -->
+    <mat-card class="summary-card">
+      <mat-card-header>
+        <mat-card-title>{{ order.orderNumber }}</mat-card-title>
+        <mat-card-subtitle>
+          <mat-chip [color]="getStatusColor(order.status)" selected>
+            {{ order.status | titlecase }}
+          </mat-chip>
+        </mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <label>Order Date:</label>
+            <span>{{ order.orderDate | date:'full' }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Customer:</label>
+            <span>{{ order.customerName }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Email:</label>
+            <span>{{ order.customerEmail }}</span>
+          </div>
+          <div class="summary-item">
+            <label>Total Amount:</label>
+            <span class="total-amount">{{ order.total | currency }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Order Items Card -->
+    <mat-card class="items-card">
+      <mat-card-header>
+        <mat-card-title>Order Items</mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="items-table">
+          <table mat-table [dataSource]="order.items" class="full-width">
+            <ng-container matColumnDef="product">
+              <th mat-header-cell *matHeaderCellDef>Product</th>
+              <td mat-cell *matCellDef="let item">
+                <div class="product-info">
+                  <strong>{{ item.productName }}</strong>
+                  <small>SKU: {{ item.sku }}</small>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="quantity">
+              <th mat-header-cell *matHeaderCellDef>Quantity</th>
+              <td mat-cell *matCellDef="let item">{{ item.quantity }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="unitPrice">
+              <th mat-header-cell *matHeaderCellDef>Unit Price</th>
+              <td mat-cell *matCellDef="let item">{{ item.unitPrice | currency }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="total">
+              <th mat-header-cell *matHeaderCellDef>Total</th>
+              <td mat-cell *matCellDef="let item">
+                <strong>{{ item.total | currency }}</strong>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="['product', 'quantity', 'unitPrice', 'total']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['product', 'quantity', 'unitPrice', 'total'];"></tr>
+          </table>
+        </div>
+
+        <!-- Order Totals -->
+        <div class="order-totals">
+          <div class="total-row">
+            <span>Subtotal:</span>
+            <span>{{ order.subtotal | currency }}</span>
+          </div>
+          <div class="total-row">
+            <span>Tax:</span>
+            <span>{{ order.tax | currency }}</span>
+          </div>
+          <div class="total-row">
+            <span>Shipping:</span>
+            <span>{{ order.shipping | currency }}</span>
+          </div>
+          <div class="total-row final-total">
+            <span>Total:</span>
+            <span>{{ order.total | currency }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Addresses Card -->
+    <div class="addresses-grid">
+      <mat-card class="address-card">
+        <mat-card-header>
+          <mat-card-title>Shipping Address</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="address">
+            <p>{{ order.shippingAddress.street }}</p>
+            <p>{{ order.shippingAddress.city }}, {{ order.shippingAddress.state }} {{ order.shippingAddress.zipCode }}</p>
+            <p>{{ order.shippingAddress.country }}</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="address-card">
+        <mat-card-header>
+          <mat-card-title>Billing Address</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="address">
+            <p>{{ order.billingAddress.street }}</p>
+            <p>{{ order.billingAddress.city }}, {{ order.billingAddress.state }} {{ order.billingAddress.zipCode }}</p>
+            <p>{{ order.billingAddress.country }}</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Payment & Notes Card -->
+    <mat-card class="payment-card">
+      <mat-card-header>
+        <mat-card-title>Payment & Additional Information</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="payment-info">
+          <div class="info-section">
+            <h4>Payment Method</h4>
+            <p>
+              {{ order.paymentMethod.type | titlecase }}
+              <span *ngIf="order.paymentMethod.brand && order.paymentMethod.last4">
+                ({{ order.paymentMethod.brand }} ending in {{ order.paymentMethod.last4 }})
+              </span>
+            </p>
+          </div>
+          
+          <div class="info-section" *ngIf="order.notes">
+            <h4>Order Notes</h4>
+            <p>{{ order.notes }}</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading order details...</p>
+  </div>
+</ng-template>

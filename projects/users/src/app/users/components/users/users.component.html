@@ -1,0 +1,237 @@
+<div class="users-container">
+  <div class="users-header">
+    <h1>User Management</h1>
+    <p>Manage user accounts, roles, and permissions across the organization.</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid" *ngIf="stats">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon">
+            <mat-icon>people</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>{{ stats.totalUsers }}</h3>
+            <p>Total Users</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon active">
+            <mat-icon>person</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>{{ stats.activeUsers }}</h3>
+            <p>Active Users</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon new">
+            <mat-icon>person_add</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>{{ stats.newUsersThisMonth }}</h3>
+            <p>New This Month</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon admin">
+            <mat-icon>admin_panel_settings</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>{{ stats.usersByRole.admin }}</h3>
+            <p>Administrators</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-card class="users-card">
+    <mat-card-header>
+      <mat-card-title>User Directory</mat-card-title>
+      <div class="header-actions">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search users...</mat-label>
+          <input matInput [formControl]="searchControl" placeholder="Search by name, email, department">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        
+        <button mat-raised-button color="primary" (click)="openUserForm()">
+          <mat-icon>add</mat-icon>
+          Add User
+        </button>
+      </div>
+    </mat-card-header>
+
+    <!-- Filters -->
+    <div class="filters-section">
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Role</mat-label>
+        <mat-select [formControl]="roleFilter">
+          <mat-option value="">All Roles</mat-option>
+          <mat-option *ngFor="let role of userRoles" [value]="role">
+            {{ role | titlecase }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Status</mat-label>
+        <mat-select [formControl]="statusFilter">
+          <mat-option value="">All Statuses</mat-option>
+          <mat-option *ngFor="let status of userStatuses" [value]="status">
+            {{ status | titlecase }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Department</mat-label>
+        <mat-select [formControl]="departmentFilter">
+          <mat-option value="">All Departments</mat-option>
+          <mat-option *ngFor="let dept of departments" [value]="dept">
+            {{ dept }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <mat-card-content>
+      <div class="table-container" *ngIf="!loading; else loadingTemplate">
+        <table mat-table [dataSource]="dataSource" matSort class="users-table">
+          <!-- Avatar Column -->
+          <ng-container matColumnDef="avatar">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let user">
+              <div class="user-avatar">
+                <span>{{ getInitials(user) }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+            <td mat-cell *matCellDef="let user">
+              <div class="user-name">
+                <strong>{{ getFullName(user) }}</strong>
+                <small *ngIf="user.position">{{ user.position }}</small>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Email Column -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+            <td mat-cell *matCellDef="let user">
+              <a [href]="'mailto:' + user.email" class="email-link">{{ user.email }}</a>
+            </td>
+          </ng-container>
+
+          <!-- Role Column -->
+          <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Role</th>
+            <td mat-cell *matCellDef="let user">
+              <mat-chip-set>
+                <mat-chip [color]="getRoleColor(user.role)" selected>
+                  {{ user.role | titlecase }}
+                </mat-chip>
+              </mat-chip-set>
+            </td>
+          </ng-container>
+
+          <!-- Department Column -->
+          <ng-container matColumnDef="department">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Department</th>
+            <td mat-cell *matCellDef="let user">
+              <span>{{ user.department || 'N/A' }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+            <td mat-cell *matCellDef="let user">
+              <mat-chip-set>
+                <mat-chip [color]="getStatusColor(user.status)" selected>
+                  {{ user.status | titlecase }}
+                </mat-chip>
+              </mat-chip-set>
+            </td>
+          </ng-container>
+
+          <!-- Last Login Column -->
+          <ng-container matColumnDef="lastLogin">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Login</th>
+            <td mat-cell *matCellDef="let user">
+              <span *ngIf="user.lastLogin; else neverLoggedIn">
+                {{ user.lastLogin | date:'short' }}
+              </span>
+              <ng-template #neverLoggedIn>
+                <span class="never-logged-in">Never</span>
+              </ng-template>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let user">
+              <div class="actions">
+                <button mat-icon-button color="primary" (click)="openUserForm(user)" matTooltip="Edit">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="accent" matTooltip="View Details">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button 
+                  mat-icon-button 
+                  [color]="user.status === 'active' ? 'warn' : 'primary'"
+                  (click)="toggleUserStatus(user)" 
+                  [matTooltip]="user.status === 'active' ? 'Deactivate' : 'Activate'">
+                  <mat-icon>{{ user.status === 'active' ? 'block' : 'check_circle' }}</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteUser(user)" matTooltip="Delete">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="user-row"></tr>
+        </table>
+
+        <mat-paginator 
+          [pageSizeOptions]="[5, 10, 20, 50]" 
+          showFirstLastButtons
+          aria-label="Select page of users">
+        </mat-paginator>
+      </div>
+
+      <ng-template #loadingTemplate>
+        <div class="loading-container">
+          <mat-spinner></mat-spinner>
+          <p>Loading users...</p>
+        </div>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</div>

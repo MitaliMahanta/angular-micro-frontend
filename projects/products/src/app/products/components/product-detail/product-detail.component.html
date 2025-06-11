@@ -1,0 +1,73 @@
+<div class="product-detail-container" *ngIf="!loading; else loadingTemplate">
+  <div class="detail-header">
+    <button mat-icon-button (click)="goBack()" matTooltip="Go back">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Product Details</h1>
+  </div>
+
+  <mat-card *ngIf="product" class="product-card">
+    <mat-card-header>
+      <mat-card-title>{{ product.name }}</mat-card-title>
+      <mat-card-subtitle>SKU: {{ product.sku }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="product-details">
+        <div class="detail-section">
+          <h3>Basic Information</h3>
+          <div class="detail-grid">
+            <div class="detail-item">
+              <label>Category:</label>
+              <span>{{ product.category }}</span>
+            </div>
+            <div class="detail-item">
+              <label>Price:</label>
+              <span class="price">{{ product.price | currency }}</span>
+            </div>
+            <div class="detail-item">
+              <label>Stock:</label>
+              <span [class.low-stock]="product.stock < 10">{{ product.stock }}</span>
+            </div>
+            <div class="detail-item">
+              <label>Status:</label>
+              <mat-chip [color]="getStatusColor(product.status)" selected>
+                {{ product.status }}
+              </mat-chip>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section" *ngIf="product.description">
+          <h3>Description</h3>
+          <p>{{ product.description }}</p>
+        </div>
+
+        <div class="detail-section" *ngIf="product.tags && product.tags.length > 0">
+          <h3>Tags</h3>
+          <mat-chip-set>
+            <mat-chip *ngFor="let tag of product.tags">{{ tag }}</mat-chip>
+          </mat-chip-set>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary">
+        <mat-icon>edit</mat-icon>
+        Edit Product
+      </button>
+      <button mat-stroked-button>
+        <mat-icon>content_copy</mat-icon>
+        Duplicate
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading product details...</p>
+  </div>
+</ng-template>
