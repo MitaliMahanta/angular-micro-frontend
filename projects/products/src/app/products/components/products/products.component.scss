@@ -1,0 +1,181 @@
+.products-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.products-header {
+  margin-bottom: 32px;
+  
+  h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #333;
+  }
+  
+  p {
+    color: rgba(0,0,0,0.6);
+    font-size: 1rem;
+  }
+}
+
+.products-card {
+  .mat-mdc-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 24px 24px 0 24px;
+  }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.search-field {
+  min-width: 300px;
+}
+
+.table-container {
+  overflow-x: auto;
+  margin-top: 16px;
+}
+
+.products-table {
+  width: 100%;
+  
+  .mat-mdc-header-cell {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .mat-mdc-cell {
+    padding: 16px 8px;
+  }
+}
+
+.product-row {
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background-color: rgba(0,0,0,0.02);
+  }
+}
+
+.product-name {
+  display: flex;
+  flex-direction: column;
+  
+  strong {
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+  
+  small {
+    color: rgba(0,0,0,0.6);
+    font-size: 12px;
+  }
+}
+
+.price {
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+.stock {
+  font-weight: 500;
+  
+  &.low-stock {
+    color: #d32f2f;
+    font-weight: 600;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+  
+  button {
+    width: 36px;
+    height: 36px;
+    
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  
+  mat-spinner {
+    margin-bottom: 16px;
+  }
+  
+  p {
+    color: rgba(0,0,0,0.6);
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .products-container {
+    padding: 16px;
+  }
+  
+  .products-header {
+    margin-bottom: 24px;
+    
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+  
+  .mat-mdc-card-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .header-actions {
+    flex-direction: column;
+    
+    .search-field {
+      min-width: auto;
+      width: 100%;
+    }
+  }
+  
+  .actions {
+    justify-content: center;
+  }
+}
+
+// Accessibility improvements
+@media (prefers-reduced-motion: reduce) {
+  .product-row {
+    transition: none;
+  }
+}
+
+// High contrast mode
+@media (prefers-contrast: high) {
+  .products-table {
+    border: 1px solid;
+  }
+  
+  .product-row:hover {
+    background-color: rgba(0,0,0,0.1);
+  }
+}

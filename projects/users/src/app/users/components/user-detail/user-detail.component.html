@@ -1,0 +1,158 @@
+<div class="user-detail-container" *ngIf="!loading; else loadingTemplate">
+  <div class="detail-header">
+    <button mat-icon-button (click)="goBack()" matTooltip="Go back">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>User Details</h1>
+  </div>
+
+  <div class="user-content" *ngIf="user">
+    <!-- User Profile Card -->
+    <mat-card class="profile-card">
+      <mat-card-content>
+        <div class="profile-header">
+          <div class="user-avatar-large">
+            <span>{{ getInitials(user) }}</span>
+          </div>
+          <div class="user-info">
+            <h2>{{ getFullName(user) }}</h2>
+            <p class="user-email">{{ user.email }}</p>
+            <div class="user-badges">
+              <mat-chip color="primary" selected>{{ user.role | titlecase }}</mat-chip>
+              <mat-chip [color]="user.status === 'active' ? 'primary' : 'warn'" selected>
+                {{ user.status | titlecase }}
+              </mat-chip>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Details Grid -->
+    <div class="details-grid">
+      <!-- Contact Information -->
+      <mat-card class="detail-card">
+        <mat-card-header>
+          <mat-card-title>Contact Information</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="detail-list">
+            <div class="detail-item">
+              <mat-icon>email</mat-icon>
+              <div>
+                <label>Email</label>
+                <span>{{ user.email }}</span>
+              </div>
+            </div>
+            <div class="detail-item" *ngIf="user.phone">
+              <mat-icon>phone</mat-icon>
+              <div>
+                <label>Phone</label>
+                <span>{{ user.phone }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Organization -->
+      <mat-card class="detail-card">
+        <mat-card-header>
+          <mat-card-title>Organization</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="detail-list">
+            <div class="detail-item" *ngIf="user.department">
+              <mat-icon>business</mat-icon>
+              <div>
+                <label>Department</label>
+                <span>{{ user.department }}</span>
+              </div>
+            </div>
+            <div class="detail-item" *ngIf="user.position">
+              <mat-icon>work</mat-icon>
+              <div>
+                <label>Position</label>
+                <span>{{ user.position }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Account Information -->
+      <mat-card class="detail-card">
+        <mat-card-header>
+          <mat-card-title>Account Information</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="detail-list">
+            <div class="detail-item">
+              <mat-icon>person_add</mat-icon>
+              <div>
+                <label>Created</label>
+                <span>{{ user.createdAt | date:'full' }}</span>
+              </div>
+            </div>
+            <div class="detail-item">
+              <mat-icon>update</mat-icon>
+              <div>
+                <label>Last Updated</label>
+                <span>{{ user.updatedAt | date:'full' }}</span>
+              </div>
+            </div>
+            <div class="detail-item" *ngIf="user.lastLogin">
+              <mat-icon>login</mat-icon>
+              <div>
+                <label>Last Login</label>
+                <span>{{ user.lastLogin | date:'full' }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Permissions -->
+      <mat-card class="detail-card permissions-card">
+        <mat-card-header>
+          <mat-card-title>Permissions</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="permissions-list" *ngIf="user.permissions && user.permissions.length > 0; else noPermissions">
+            <mat-chip-set>
+              <mat-chip *ngFor="let permission of user.permissions">
+                {{ permission }}
+              </mat-chip>
+            </mat-chip-set>
+          </div>
+          <ng-template #noPermissions>
+            <p class="no-permissions">No specific permissions assigned</p>
+          </ng-template>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions-section">
+      <button mat-raised-button color="primary">
+        <mat-icon>edit</mat-icon>
+        Edit User
+      </button>
+      <button mat-stroked-button>
+        <mat-icon>lock_reset</mat-icon>
+        Reset Password
+      </button>
+      <button mat-stroked-button [color]="user.status === 'active' ? 'warn' : 'primary'">
+        <mat-icon>{{ user.status === 'active' ? 'block' : 'check_circle' }}</mat-icon>
+        {{ user.status === 'active' ? 'Deactivate' : 'Activate' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading user details...</p>
+  </div>
+</ng-template>
